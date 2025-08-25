@@ -55,6 +55,12 @@ const navigationItems = [
     icon: TrendingUp,
     href: '/performance',
     description: 'Indicadores de vendas'
+  },
+  {
+    title: 'Propostas Comerciais',
+    icon: FileText,
+    href: '/proposals',
+    description: 'Gestão de propostas'
   }
 ];
 
