@@ -24,18 +24,18 @@ import { Cliente } from '@/types';
 
 export default function Clients() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterSegmento, setFilterSegmento] = useState<string>('');
-  const [filterStatus, setFilterStatus] = useState<string>('');
-  const [filterTipo, setFilterTipo] = useState<string>('');
+  const [filterSegmento, setFilterSegmento] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterTipo, setFilterTipo] = useState<string>('all');
 
   const filteredClients = mockClientes.filter(cliente => {
     const matchesSearch = cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cliente.cnpj.includes(searchTerm) ||
                          cliente.cidade.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesSegmento = !filterSegmento || cliente.segmentacao === filterSegmento;
-    const matchesStatus = !filterStatus || cliente.statusAtendimento === filterStatus;
-    const matchesTipo = !filterTipo || cliente.tipoEvento === filterTipo;
+    const matchesSegmento = filterSegmento === 'all' || cliente.segmentacao === filterSegmento;
+    const matchesStatus = filterStatus === 'all' || cliente.statusAtendimento === filterStatus;
+    const matchesTipo = filterTipo === 'all' || cliente.tipoEvento === filterTipo;
 
     return matchesSearch && matchesSegmento && matchesStatus && matchesTipo;
   });
@@ -114,7 +114,7 @@ export default function Clients() {
                 <SelectValue placeholder="Tipo de Evento" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="SHOWROOM">Showroom</SelectItem>
                 <SelectItem value="PRONTA_ENTREGA">Pronta Entrega</SelectItem>
                 <SelectItem value="CARTEIRA">Carteira</SelectItem>
@@ -126,7 +126,7 @@ export default function Clients() {
                 <SelectValue placeholder="Segmentação" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="Ouro">Ouro</SelectItem>
                 <SelectItem value="Prata">Prata</SelectItem>
                 <SelectItem value="Bronze">Bronze</SelectItem>
@@ -138,7 +138,7 @@ export default function Clients() {
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="Atendido">Atendido</SelectItem>
                 <SelectItem value="Em Andamento">Em Andamento</SelectItem>
                 <SelectItem value="Não Atendido">Não Atendido</SelectItem>
@@ -149,9 +149,9 @@ export default function Clients() {
               variant="outline" 
               onClick={() => {
                 setSearchTerm('');
-                setFilterSegmento('');
-                setFilterStatus('');
-                setFilterTipo('');
+                setFilterSegmento('all');
+                setFilterStatus('all');
+                setFilterTipo('all');
               }}
             >
               Limpar
