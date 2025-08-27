@@ -39,34 +39,39 @@ const formatCurrency = (value: number) => {
 
 export function RevenueChart() {
   return (
-    <Card className="col-span-4">
-      <CardHeader>
-        <CardTitle>Evolução da Receita</CardTitle>
+    <Card className="bg-gradient-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <div className="h-10 w-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-md">
+            <BarChart className="h-5 w-5 text-white" />
+          </div>
+          Evolução da Receita
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+            <CartesianGrid strokeDasharray="3 3" className="opacity-20" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="month" 
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
               tickFormatter={formatCurrency}
             />
             <Tooltip
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
-                      <p className="font-medium mb-2">{label}</p>
+                    <div className="bg-card/95 backdrop-blur-sm border border-border/20 rounded-xl p-4 shadow-xl">
+                      <p className="font-semibold mb-3 text-foreground">{label}</p>
                       {payload.map((entry, index) => (
-                        <p key={index} style={{ color: entry.color }}>
+                        <p key={index} className="text-sm font-medium mb-1" style={{ color: entry.color }}>
                           {entry.name}: {formatCurrency(Number(entry.value))}
                         </p>
                       ))}
@@ -76,24 +81,33 @@ export function RevenueChart() {
                 return null;
               }}
             />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ 
+                paddingTop: '20px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            />
             <Bar 
               dataKey="anterior" 
               name="Ano Anterior"
-              fill="hsl(var(--muted))"
-              radius={[2, 2, 0, 0]}
+              fill="hsl(var(--muted-foreground))"
+              radius={[4, 4, 0, 0]}
+              className="hover:opacity-80"
             />
             <Bar 
               dataKey="atual" 
               name="Atual"
               fill="hsl(var(--primary))"
-              radius={[2, 2, 0, 0]}
+              radius={[4, 4, 0, 0]}
+              className="hover:opacity-80"
             />
             <Bar 
               dataKey="meta" 
               name="Meta"
               fill="hsl(var(--success))"
-              radius={[2, 2, 0, 0]}
+              radius={[4, 4, 0, 0]}
+              className="hover:opacity-80"
             />
           </BarChart>
         </ResponsiveContainer>

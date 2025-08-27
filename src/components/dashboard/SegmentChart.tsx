@@ -44,8 +44,9 @@ export function SegmentChart() {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={12}
-        fontWeight="600"
+        fontSize={14}
+        fontWeight="700"
+        className="drop-shadow-sm"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -53,9 +54,14 @@ export function SegmentChart() {
   };
 
   return (
-    <Card className="col-span-2">
-      <CardHeader>
-        <CardTitle>Receita por Segmentação</CardTitle>
+    <Card className="bg-gradient-card border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <div className="h-10 w-10 bg-gradient-warning rounded-xl flex items-center justify-center shadow-md">
+            <PieChart className="h-5 w-5 text-white" />
+          </div>
+          Receita por Segmentação
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -66,12 +72,18 @@ export function SegmentChart() {
               cy="50%"
               labelLine={false}
               label={renderCustomLabel}
-              outerRadius={80}
+              outerRadius={90}
+              innerRadius={30}
               fill="#8884d8"
               dataKey="value"
+              className="drop-shadow-lg"
             >
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.color}
+                  className="hover:opacity-80 transition-opacity duration-200"
+                />
               ))}
             </Pie>
             <Tooltip
@@ -79,10 +91,10 @@ export function SegmentChart() {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
-                      <p className="font-medium">{data.name}</p>
-                      <p className="text-sm">Receita: {formatCurrency(data.receita)}</p>
-                      <p className="text-sm">Participação: {data.value}%</p>
+                    <div className="bg-card/95 backdrop-blur-sm border border-border/20 rounded-xl p-4 shadow-xl">
+                      <p className="font-semibold text-foreground mb-2">{data.name}</p>
+                      <p className="text-sm font-medium text-primary">Receita: {formatCurrency(data.receita)}</p>
+                      <p className="text-sm font-medium text-muted-foreground">Participação: {data.value}%</p>
                     </div>
                   );
                 }
@@ -92,19 +104,19 @@ export function SegmentChart() {
           </PieChart>
         </ResponsiveContainer>
         
-        <div className="mt-4 space-y-2">
+        <div className="mt-6 space-y-3">
           {data.map((item, index) => (
-            <div key={index} className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
+            <div key={index} className="flex items-center justify-between p-3 bg-gradient-primary-soft/30 rounded-xl border border-border/20 hover:bg-gradient-primary-soft/50 transition-all duration-200">
+              <div className="flex items-center gap-3">
                 <div 
-                  className="w-3 h-3 rounded-full"
+                  className="w-4 h-4 rounded-full shadow-sm border border-white/50"
                   style={{ backgroundColor: item.color }}
                 />
-                <span>{item.name}</span>
+                <span className="font-semibold text-foreground">{item.name}</span>
               </div>
               <div className="text-right">
-                <p className="font-medium">{formatCurrency(item.receita)}</p>
-                <p className="text-xs text-muted-foreground">{item.value}%</p>
+                <p className="font-bold text-foreground">{formatCurrency(item.receita)}</p>
+                <p className="text-sm font-medium text-muted-foreground">{item.value}%</p>
               </div>
             </div>
           ))}

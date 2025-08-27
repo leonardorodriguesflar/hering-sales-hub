@@ -44,13 +44,21 @@ export function KPICard({
     return 'text-muted-foreground';
   };
 
+  const getIconBackground = () => {
+    if (trend === 'up') return 'bg-gradient-success';
+    if (trend === 'down') return 'bg-gradient-warning';
+    return 'bg-gradient-primary';
+  };
+
   const getTrendIcon = () => {
     if (change === undefined) return null;
     
     return (
       <div className={cn(
-        "flex items-center gap-1 text-sm font-medium",
-        getTrendColor()
+        "flex items-center gap-1 text-sm font-bold px-2 py-1 rounded-full",
+        trend === 'up' && "bg-success/10 text-success",
+        trend === 'down' && "bg-destructive/10 text-destructive",
+        trend === 'neutral' && "bg-muted/20 text-muted-foreground"
       )}>
         {change > 0 && '+'}
         {change}
@@ -60,21 +68,29 @@ export function KPICard({
   };
 
   return (
-    <Card className={cn("hover:shadow-lg transition-all duration-300", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+    <Card className={cn(
+      "hover:shadow-glow transition-all duration-300 bg-gradient-card border-0 group hover:scale-[1.02] cursor-pointer",
+      className
+    )}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
           {title}
         </CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
+        <div className={cn(
+          "h-12 w-12 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300",
+          getIconBackground()
+        )}>
+          <Icon className="h-6 w-6 text-white" />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="flex items-end justify-between">
           <div>
-            <div className="text-2xl font-bold">
+            <div className="text-3xl font-bold text-foreground mb-1 tracking-tight">
               {formatValue(value)}
             </div>
             {previousValue && (
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-muted-foreground font-medium">
                 Anterior: {formatValue(previousValue)}
               </p>
             )}
