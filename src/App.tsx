@@ -114,7 +114,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.PROD ? '/hering-sales-hub' : '/'}>
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
