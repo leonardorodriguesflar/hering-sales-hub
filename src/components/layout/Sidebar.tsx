@@ -9,28 +9,32 @@ import {
   Settings,
   ChevronLeft,
   TrendingUp,
-  MapPin
+  MapPin,
+  Calendar,
+  UserCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const navigationItems = [
+// Navegação para o Planejamento (acesso total)
+const planejamentoNavigation = [
   {
-    title: 'Dashboard',
+    title: 'Dashboard Geral',
     icon: LayoutDashboard,
-    href: '/',
-    description: 'Visão geral dos KPIs'
+    href: '/dashboard',
+    description: 'Visão geral consolidada'
   },
   {
     title: 'Clientes',
     icon: Users,
     href: '/clients',
-    description: 'Gestão da carteira'
+    description: 'Toda a carteira'
   },
   {
     title: 'Análise Geográfica',
@@ -42,25 +46,59 @@ const navigationItems = [
     title: 'Relatórios',
     icon: BarChart3,
     href: '/reports',
-    description: 'Analytics avançados'
+    description: 'Analytics consolidados'
   },
   {
     title: 'Metas',
     icon: Target,
     href: '/goals',
-    description: 'Acompanhamento de objetivos'
+    description: 'Objetivos da empresa'
   },
   {
     title: 'Performance',
     icon: TrendingUp,
     href: '/performance',
-    description: 'Indicadores de vendas'
+    description: 'Indicadores gerais'
   },
   {
     title: 'Propostas Comerciais',
     icon: FileText,
     href: '/proposals',
-    description: 'Gestão de propostas'
+    description: 'Todas as propostas'
+  }
+];
+
+// Navegação para o Vendedor (acesso restrito)
+const vendedorNavigation = [
+  {
+    title: 'Meu Dashboard',
+    icon: UserCheck,
+    href: '/vendedor',
+    description: 'Minha performance'
+  },
+  {
+    title: 'Meus Clientes',
+    icon: Users,
+    href: '/clients',
+    description: 'Minha carteira'
+  },
+  {
+    title: 'Minhas Propostas',
+    icon: FileText,
+    href: '/proposals',
+    description: 'Propostas criadas'
+  },
+  {
+    title: 'Agenda',
+    icon: Calendar,
+    href: '/performance',
+    description: 'Visitas e follow-ups'
+  },
+  {
+    title: 'Relatórios',
+    icon: BarChart3,
+    href: '/reports',
+    description: 'Meus números'
   }
 ];
 
@@ -75,6 +113,10 @@ const bottomItems = [
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const { user } = useAuth();
+
+  // Escolhe a navegação baseada no role do usuário
+  const navigationItems = user?.role === 'vendedor' ? vendedorNavigation : planejamentoNavigation;
 
   const isActive = (path: string) => {
     return path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);

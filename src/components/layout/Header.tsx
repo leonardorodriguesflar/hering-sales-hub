@@ -1,18 +1,23 @@
-import { Bell, Search, User, Menu } from 'lucide-react';
+import { Bell, Search, User, Menu, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/contexts/AuthContext';
+import { Badge } from '@/components/ui/badge';
 
 interface HeaderProps {
   onMenuClick: () => void;
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
+  const { user, logout } = useAuth();
+
   return (
     <header className="h-16 bg-gradient-hero border-b border-border/20 flex items-center justify-between px-6 shadow-lg backdrop-blur-sm">
       <div className="flex items-center gap-4">
@@ -31,7 +36,14 @@ export function Header({ onMenuClick }: HeaderProps) {
           </div>
           <div>
             <h1 className="font-bold text-xl text-white tracking-tight">Hering Sales Hub</h1>
-            <p className="text-xs text-white/80 font-medium">Sistema Premium de Gestão de Vendas</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-white/80 font-medium">Sistema Premium de Gestão de Vendas</p>
+              {user && (
+                <Badge variant="secondary" className="bg-white/20 text-white border-0 text-xs">
+                  {user.role === 'vendedor' ? 'Vendedor' : 'Planejamento'}
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -59,15 +71,19 @@ export function Header({ onMenuClick }: HeaderProps) {
                 <User className="h-4 w-4 text-primary" />
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-sm font-semibold text-white">João Vendedor</p>
-                <p className="text-xs text-white/80">Região Sul</p>
+                <p className="text-sm font-semibold text-white">{user?.name}</p>
+                <p className="text-xs text-white/80">{user?.region || 'Gestão'}</p>
               </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 bg-card/95 backdrop-blur-sm border-border/20">
             <DropdownMenuItem>Perfil</DropdownMenuItem>
             <DropdownMenuItem>Configurações</DropdownMenuItem>
-            <DropdownMenuItem>Sair</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={logout} className="text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sair
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
