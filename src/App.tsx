@@ -21,11 +21,19 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 function AppRoutes() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  
+  console.log('AppRoutes render - user:', user, 'isAuthenticated:', isAuthenticated);
   
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={
+        isAuthenticated ? (
+          <Navigate to={user?.role === 'vendedor' ? '/vendedor' : '/dashboard'} replace />
+        ) : (
+          <Login />
+        )
+      } />
       <Route path="/" element={
         <ProtectedRoute>
           <Layout>

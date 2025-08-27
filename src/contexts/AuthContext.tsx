@@ -48,18 +48,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    console.log('AuthContext login called with:', { email, password });
+    
     // Simular delay de API
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Mock validation - aceita qualquer senha para demonstração
     const foundUser = mockUsers.find(u => u.email === email);
+    console.log('Found user:', foundUser);
     
     if (foundUser && password.length > 0) {
+      console.log('Login successful, setting user:', foundUser);
       setUser(foundUser);
       localStorage.setItem('hering_user', JSON.stringify(foundUser));
       return true;
     }
     
+    console.log('Login failed');
     return false;
   };
 

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,19 +14,37 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login, user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirecionar se já estiver autenticado
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const redirectPath = user.role === 'vendedor' ? '/vendedor' : '/dashboard';
+      console.log('User already authenticated, redirecting to:', redirectPath);
+      navigate(redirectPath, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
+    console.log('Login attempt:', { email, password });
+
     try {
       const success = await login(email, password);
-      if (!success) {
+      console.log('Login result:', success);
+      
+      if (success) {
+        // Login bem-sucedido, aguardar o useEffect redirecionar
+        console.log('Login successful, waiting for redirect...');
+      } else {
         setError('Credenciais inválidas. Tente novamente.');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('Erro ao fazer login. Tente novamente.');
     } finally {
       setIsLoading(false);
